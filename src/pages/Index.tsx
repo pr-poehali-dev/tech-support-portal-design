@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -52,7 +51,6 @@ const priorityConfig = {
 };
 
 export default function Index() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [description, setDescription] = useState('');
 
@@ -62,13 +60,12 @@ export default function Index() {
 
   const handleSubmit = () => {
     console.log('Создание заявки:', { category: selectedCategory, description });
-    setIsDialogOpen(false);
     setSelectedCategory('');
     setDescription('');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50">
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -88,175 +85,133 @@ export default function Index() {
 
       <main className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="shadow-md hover:shadow-lg transition-shadow border-gray-200">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                  <Icon name="Inbox" size={20} className="text-blue-600" />
-                  Новые запросы
-                </CardTitle>
-                <Badge className="bg-blue-600">{newTickets.length}</Badge>
-              </div>
+          <Card className="bg-white shadow-md border-gray-200">
+            <CardHeader className="pb-4 border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <Icon name="FilePlus" size={20} className="text-blue-600" />
+                Новая заявка
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-primary hover:bg-primary/90 mb-4" size="lg">
-                    <Icon name="Plus" size={18} className="mr-2" />
-                    Создать новую заявку
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Создание новой заявки</DialogTitle>
-                    <DialogDescription>
-                      Выберите категорию обращения и опишите проблему
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label>Категория обращения</Label>
-                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Выберите категорию" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map(cat => (
-                            <SelectItem key={cat.value} value={cat.value}>
-                              <div className="flex items-center gap-2">
-                                <Icon name={cat.icon as any} size={16} />
-                                {cat.label}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Описание проблемы</Label>
-                      <Textarea 
-                        placeholder="Подробно опишите вашу проблему или вопрос..." 
-                        className="min-h-[120px]"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                    </div>
-                    <Button onClick={handleSubmit} className="w-full" size="lg">
-                      Отправить заявку
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
-              {newTickets.map(ticket => (
-                <div key={ticket.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium text-sm text-gray-900 flex-1">{ticket.title}</h4>
-                    <Badge variant="outline" className={`ml-2 ${priorityConfig[ticket.priority].color}`}>
-                      {priorityConfig[ticket.priority].label}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-gray-600 mb-2">{ticket.category}</p>
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Icon name="Clock" size={12} className="mr-1" />
-                    {ticket.createdAt}
-                  </div>
-                </div>
-              ))}
+            <CardContent className="pt-6 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Категория обращения</Label>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Выберите категорию" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(cat => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        <div className="flex items-center gap-2">
+                          <Icon name={cat.icon as any} size={16} />
+                          <span className="text-sm">{cat.label}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Описание проблемы</Label>
+                <Textarea 
+                  placeholder="Подробно опишите вашу проблему или вопрос..." 
+                  className="min-h-[140px] resize-none"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+              <Button 
+                onClick={handleSubmit} 
+                className="w-full bg-primary hover:bg-primary/90" 
+                size="lg"
+                disabled={!selectedCategory || !description}
+              >
+                <Icon name="Send" size={18} className="mr-2" />
+                Отправить заявку
+              </Button>
             </CardContent>
           </Card>
 
-          <Card className="shadow-md hover:shadow-lg transition-shadow border-gray-200">
-            <CardHeader className="pb-4">
+          <Card className="bg-white shadow-md border-gray-200">
+            <CardHeader className="pb-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                  <Icon name="Settings" size={20} className="text-orange-600" />
-                  В работе
+                  <Icon name="Clock" size={20} className="text-orange-600" />
+                  Заявки в работе
                 </CardTitle>
                 <Badge className="bg-orange-600">{inProgressTickets.length}</Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
-              {inProgressTickets.map(ticket => (
-                <div key={ticket.id} className="p-3 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors cursor-pointer">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium text-sm text-gray-900 flex-1">{ticket.title}</h4>
-                    <Badge variant="outline" className={`ml-2 ${priorityConfig[ticket.priority].color}`}>
-                      {priorityConfig[ticket.priority].label}
-                    </Badge>
+            <CardContent className="pt-4 space-y-3 max-h-[400px] overflow-y-auto">
+              {inProgressTickets.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">Нет заявок в работе</p>
+              ) : (
+                inProgressTickets.map(ticket => (
+                  <div key={ticket.id} className="p-3 bg-orange-50 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors cursor-pointer">
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-medium text-sm text-gray-900 flex-1">{ticket.title}</h4>
+                      <Badge variant="outline" className={`ml-2 text-xs ${priorityConfig[ticket.priority].color}`}>
+                        {priorityConfig[ticket.priority].label}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{ticket.category}</p>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Icon name="Clock" size={12} className="mr-1" />
+                      {ticket.createdAt}
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-600 mb-2">{ticket.category}</p>
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Icon name="Clock" size={12} className="mr-1" />
-                    {ticket.createdAt}
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
 
-          <Card className="shadow-md hover:shadow-lg transition-shadow border-gray-200">
-            <CardHeader className="pb-4">
+          <Card className="bg-white shadow-md border-gray-200">
+            <CardHeader className="pb-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
                   <Icon name="CheckCircle2" size={20} className="text-green-600" />
-                  Завершенные
+                  Завершенные заявки
                 </CardTitle>
                 <Badge className="bg-green-600">{completedTickets.length}</Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
-              {completedTickets.map(ticket => (
-                <div key={ticket.id} className="p-3 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors cursor-pointer">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium text-sm text-gray-900 flex-1">{ticket.title}</h4>
-                    <Badge variant="outline" className={`ml-2 ${priorityConfig[ticket.priority].color}`}>
-                      {priorityConfig[ticket.priority].label}
-                    </Badge>
+            <CardContent className="pt-4 space-y-3 max-h-[400px] overflow-y-auto">
+              {completedTickets.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">Нет завершенных заявок</p>
+              ) : (
+                completedTickets.map(ticket => (
+                  <div key={ticket.id} className="p-3 bg-green-50 rounded-lg border border-green-200 hover:bg-green-100 transition-colors cursor-pointer">
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-medium text-sm text-gray-900 flex-1">{ticket.title}</h4>
+                      <Badge variant="outline" className={`ml-2 text-xs ${priorityConfig[ticket.priority].color}`}>
+                        {priorityConfig[ticket.priority].label}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{ticket.category}</p>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Icon name="Clock" size={12} className="mr-1" />
+                      {ticket.createdAt}
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-600 mb-2">{ticket.category}</p>
-                  <div className="flex items-center text-xs text-gray-500">
-                    <Icon name="Clock" size={12} className="mr-1" />
-                    {ticket.createdAt}
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
         </div>
 
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Icon name="Info" size={24} className="text-primary" />
-            Информационные разделы
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {infoSections.map((section, index) => (
-              <Card 
-                key={index} 
-                className={`cursor-pointer transition-all shadow-sm hover:shadow-md border-2 ${section.color}`}
-              >
-                <CardHeader>
-                  <CardTitle className="text-base font-medium flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg">
-                      <Icon name={section.icon as any} size={24} />
-                    </div>
-                    {section.title}
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {infoSections.map((section, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              className={`h-auto py-4 px-5 justify-start text-left ${section.color} border-2 transition-all hover:shadow-md`}
+            >
+              <Icon name={section.icon as any} size={20} className="mr-3 flex-shrink-0" />
+              <span className="font-medium text-sm">{section.title}</span>
+            </Button>
+          ))}
         </div>
       </main>
-
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-6 py-4">
-          <p className="text-center text-sm text-gray-600">
-            © 2025 Портал техподдержки. Все права защищены.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
